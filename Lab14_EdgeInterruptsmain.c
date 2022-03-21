@@ -94,7 +94,7 @@ int main(void){  // test of interrupt-driven bump interface
       else {
           Motor_Forward(motor_out[0], motor_out[1]);
       }
-      Clock_Delay1ms(40);
+      Clock_Delay1ms(5);
   }
 }
 
