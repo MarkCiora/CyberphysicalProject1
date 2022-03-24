@@ -62,14 +62,14 @@ State_t fsm2[21]={
 #define left      &fsm2[6]
 #define llft     &fsm2[7]
 State_t fsm2[8]={
-  {{6500, 6500}, { ctrR, ctrR, ctrL, ctrL, lctr }},  // center
-  {{6500, 6500}, {ctrR, cntr, cntr, ctrL, lctr }}, //lost center
-  {{5300, 5500}, { rght, ctrR, cntr, ctrL, lrgt }},   // center right
-  {{6500, 6300}, { ctrR, cntr, ctrL, left, llft }},   // center left
-  {{-5000, 6000}, { rght, ctrR, ctrR, cntr, lrgt }},  // right
-  {{-5000, 6000}, { rght, ctrR, ctrR, cntr, lrgt }},  // lost right
-  {{6500, -5300}, { cntr, ctrL, ctrL, left, llft }},   // left
-  {{6500, -5300}, { cntr, ctrL, ctrL, left, llft }},  //lost left
+  {{8000, 8000}, { ctrR, ctrR, cntr, ctrL, ctrL, lctr }},  // center
+  {{8000, 8000}, {ctrR, cntr, cntr, cntr, ctrL, lctr }}, //lost center
+  {{8000, 8000}, { rght, ctrR, cntr, cntr, ctrL, lrgt }},   // center right
+  {{8000, 8000}, { ctrR, cntr, cntr, ctrL, left, llft }},   // center left
+  {{-2000, 10000}, { rght, ctrR, ctrR, ctrR, cntr, lrgt }},  // right
+  {{-6000, 8000}, { rght, ctrR, ctrR, ctrR, cntr, lrgt }},  // lost right
+  {{10000, -2000}, { cntr, ctrL, ctrL, ctrL, left, llft }},   // left
+  {{8000, -6000}, { cntr, ctrL, ctrL, ctrL, left, llft }},  //lost left
 };
 
 
@@ -81,18 +81,28 @@ void set_state_start(){
 
 void next_state_and_output(int32_t *input, int16_t output[2]){
     uint32_t next_num=2;
-    if (*input < -16000){
+    if (*input < -30000){
         next_num = 0;
-    }else if(*input < 0){
+    }else if(*input < -15000){
         next_num = 1;
-    }else if(*input < 16000){
+    }else if (*input < 15000){
         next_num = 2;
-    }else if(*input < 33400){
+    }else if(*input <= 30000){
         next_num = 3;
-    }else if(*input == 1000000){
+    }else if(*input <= 33400){
         next_num = 4;
+    }else if(*input == 1000000){
+        next_num = 5;
     }
     ptr = ptr->next[next_num];
-    output[0] = ptr->out[1];
-    output[1] = ptr->out[0];
+    if (ptr == ctrR){
+        output[0] = ptr->out[1];
+        output[1] = ptr->out[0] + ((*input - 15000) / 5);
+    }else if (ptr == ctrL){
+        output[0] = ptr->out[1] - ((*input + 15000) / 5);
+        output[1] = ptr->out[0];
+    }else {
+        output[0] = ptr->out[1];
+        output[1] = ptr->out[0];
+    }
 }

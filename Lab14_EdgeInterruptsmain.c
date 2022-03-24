@@ -50,28 +50,17 @@ policies, either expressed or implied, of the FreeBSD Project.
 #include "msp.h"
 #include "../inc/Clock.h"
 #include "../inc/CortexM.h"
-#include "../inc/LaunchPad.h"
 #include "../inc/Motor.h"
 #include "../inc/BumpInt.h"
-#include "../inc/TExaS.h"
 #include "../inc/TimerA1.h"
-#include "../inc/FlashProgram.h"
 #include "../inc/Reflectance.h"
-#include "../inc/SysTick.h"
 #include "my_fsm.h"
 
-uint8_t CollisionData, CollisionFlag;  // mailbox
-void HandleCollision(uint8_t bumpSensor){
-   Motor_Stop();
-   CollisionData = bumpSensor;
-   CollisionFlag = 1;
-}
 int main(void){  // test of interrupt-driven bump interface
   Clock_Init48MHz();   // 48 MHz clock; 12 MHz Timer A clock
-  CollisionFlag = 0;
   Motor_Init();        // activate Lab 13 software
   PWM_Init34(15000,0,0);
-  BumpInt_Init(&HandleCollision);
+  BumpInt_Init();
   Reflectance_Init();
   EnableInterrupts();
 
@@ -94,7 +83,7 @@ int main(void){  // test of interrupt-driven bump interface
       else {
           Motor_Forward(motor_out[0], motor_out[1]);
       }
-      Clock_Delay1ms(5);
+      Clock_Delay1ms(3);
   }
 }
 

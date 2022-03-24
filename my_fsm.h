@@ -15,7 +15,7 @@
 // -4 <= p < -1,    -1 <= p < 0,    0 <= p <= 1,    1 < p <= 4
 struct State1 {
     int16_t out[2];
-  const struct State1 *next[5]; // Next if 2-bit input is 0-3
+  const struct State1 *next[6]; // Next if 2-bit input is 0-3
 };
 typedef const struct State1 State_t;
 
